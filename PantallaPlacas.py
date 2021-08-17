@@ -1,0 +1,30 @@
+from tkinter import *
+principal = Tk()
+principal.title("Placas")
+principal.configure(bg="blanched almond")
+frameSecundario = Frame()
+frameSecundario.place(x=350, y=100)
+frameSecundario.config(bg="white")
+frameSecundario.config(width="650", height="350")
+frameSecundario.config(bd=25)
+frameSecundario.config(bd=2, relief="ridge")
+
+lblInfo = Label(principal, text="Datos del Vehículo", font=(18))
+lblInfo.config(bg="blanched almond")
+lblInfo.config(font="Arial")
+lblInfo.place(x=115, y=70)
+
+frameDatos = Frame()
+frameDatos.place(x=50, y=100)
+frameDatos.config(bg="white")
+frameDatos.config(width="250", height="400")
+frameDatos.config(bd=2, relief="ridge")
+
+btn1 = Button(frameDatos, text="PENDIENTE")
+btn1.place(x=10, y=300)
+btn2 = Button(frameDatos, text="PENDIENTE")
+btn2.place(x=120, y=300)
+
+principal.geometry("1024x680")
+principal.resizable(0,0)
+principal.mainloop()
