@@ -18,7 +18,7 @@ frameDatos = Frame()
 frameDatos.place(x=50, y=100)
 frameDatos.config(bg="white")
 frameDatos.config(width="250", height="400")
-frameDatos.config(bd=2, relief="ridge")
+frameDatos.config(bd=2, relief="solid")
 
 btn1 = Button(frameDatos, text="PENDIENTE")
 btn1.place(x=10, y=300)
