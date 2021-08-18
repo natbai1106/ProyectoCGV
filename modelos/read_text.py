@@ -20,7 +20,7 @@ class process_image:
  
   def get_processed_image(self,ruta=""):
     
-    image = cv2.imread("ProyectoCGV/images/carro-1.jpg")
+    image = cv2.imread("ProyectoCGV/images/carro-5.jpg")
     print("[INFO] dimensiones {}".format(image.shape[:2]))
     image = Utilidades.redimencionar(image,30)
     print("[INFO] redimension {}".format(image.shape[:2]))
