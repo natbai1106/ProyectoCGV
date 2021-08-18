@@ -35,9 +35,6 @@ lblCar.place(x=0, y=0)
 btnSiguiente = Button(frameSecundario, textvariable=placa,command=next_photo_event)
 
 btnSiguiente.place(x=10, y=300)
-
-
-
 lblInfo = Label(principal, text="Placa del Vehículo: " + str(placa), font=(16))
 lblInfo.config(bg="blanched almond")
 lblInfo.config(font="Arial")
@@ -72,4 +69,3 @@ btn2.place(x=140, y=350)
 principal.geometry("1024x680")
 principal.resizable(0,0)
 principal.mainloop()
-
