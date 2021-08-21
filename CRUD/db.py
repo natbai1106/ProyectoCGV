@@ -1,3 +1,4 @@
+from ntpath import join
 import pymysql
 
 class Database:
@@ -27,6 +28,14 @@ class Database:
         #Retornamos el dato solicitado
         return self.cursor.fetchone()
 
+    def InformationVehicles(self, ref):
+        #Declaramos la sentencia SQL para obtener un dato específico de la tabla
+        sql = "select tbl_personas.nombre, tbl_vehiculos.placa, tbl_marcas.nombre, tbl_vehiculos.modelo, tbl_vehiculos.color from tbl_vehiculos inner join tbl_personas on tbl_vehiculos.persona_id = tbl_personas.persona_id inner join tbl_marcas on tbl_vehiculos.marca_id = tbl_marcas.marca_id where tbl_vehiculos.placa = 'pdr6349'"
+        #Ejecutamos la sentencia
+        self.cursor.execute(sql)
+        #Retornamos el dato solicitado
+        return self.cursor.fetchone()
+
     def returnAllElements(self):
         sql = "select * from tbl_personas"
         self.cursor.execute(sql)
@@ -44,3 +53,5 @@ class Database:
         self.cursor.execute(sql)
         #Guardamos cambios
         self.conn.commit()
+    
+        

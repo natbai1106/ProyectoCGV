@@ -1,51 +1,57 @@
  
+from mysql.connector import cursor
+from pymysql import cursors
+from CRUD.db import Database
 from tkinter import *
 from tkinter import messagebox
 
-from cv2 import goodFeaturesToTrack
 from modelos import read_text
 from tkinter import filedialog
 from PIL import Image
 from PIL import ImageTk
 from tkinter import ttk
 from imutils import paths
-
-rutaFotos = sorted(list(paths.list_images("ProyectoCGV/images/")))
+from modelos import person
+rutaFotos = sorted(list(paths.list_images("images/")))
 index  =  0
 car = read_text.process_image()
-placa =""
-class Load:
-    list = []
-    def __init__(self) -> None:
-        self.list=[]
-        pass
-    def next_photo_event(self):
-        self.l
-    def load_image(self):
-        return  sorted(list(paths.list_images("ProyectoCGV/images/")))
+
+
+
 def next_photo():
     
-    print(len(rutaFotos))
     if len(rutaFotos)>0:
         global index
+        
         image =car.get_processed_image(ruta=rutaFotos[index])
-        placa = StringVar()
         # Para visualizar la imagen en lblOutputImage en la GUI
         im = Image.fromarray(image)
         img = ImageTk.PhotoImage(image=im)
         lblCar.configure(image=img)
         lblCar.image = img
-        placa.set(car.text)
+        placa.set("Placa: "+ car.text)
+        persona = person.Person()
+        info_owner = persona.get_info_owner(car.text)
+        print(info_owner)   
+        if info_owner is not None:
+            propitario.set("Propietario: "+str(info_owner[0]))
+            marca.set("Marca: "+str(info_owner[2]))
+            modelo.set("Modelo: "+str(info_owner[3]))
+            color.set("Color: "+info_owner[4])
         if index >= len(rutaFotos)-1:
             index=0
         else:
             index+=1
-        
-    
-#Variables de inicialización
+           
 
 
 principal = Tk()
+placa = StringVar(value="Placa: ")
+propitario=StringVar(value="Propietario: ")
+marca=StringVar(value="Marca: ")
+modelo=StringVar(value="Modelo: ")
+color=StringVar(value="Color: ")
+
 principal.title("Placas")
 principal.configure(bg="blanched almond")
 frameSecundario = Frame()
@@ -73,24 +79,24 @@ lblCar = Label(frameSecundario, text="vehiculo", font=(18))
 lblCar.config(bg="blanched almond")
 lblCar.config(font="Arial")
 lblCar.place(x=0, y=0)
-next_photo()#Se llama a la funcion next foto para que cargue un carro por defecto
+#next_photo()#Se llama a la funcion next foto para que cargue un carro por defecto
 
 
 btnSiguiente = Button(frameSecundario, text="Siguiente",command=next_photo)
 
 btnSiguiente.place(x=10, y=300)
 
-lblInfo = Label(principal, text="Placa del Vehículo: " + str(placa), font=(16))
+lblInfo = Label(principal, textvariable=placa, font=(16))
 lblInfo.config(bg="blanched almond")
 lblInfo.config(font="Arial")
 lblInfo.place(x=70, y=20)
 
-lblImagenPlaca = Label(principal, text="Imagen del Vehículo" + str(placa), font=(16))
+lblImagenPlaca = Label(principal, text="Imagen del Vehículo", font=(16))
 lblImagenPlaca.config(bg="blanched almond")
 lblImagenPlaca.config(font="Arial")
 lblImagenPlaca.place(x=450, y=20)
 
-lblReporte = Label(principal, text="Reporte" + str(placa), font=(16))
+lblReporte = Label(principal, text="Reporte", font=(16))
 lblReporte.config(bg="blanched almond")
 lblReporte.config(font="Arial")
 lblReporte.place(x=875, y=20)
@@ -101,19 +107,19 @@ frameDatos.config(bg="white")
 frameDatos.config(width="250", height="550")
 #(width="450", height="350")
 frameDatos.config(bd=2, relief="ridge")
-lblDuenio = Label(frameDatos, text="Propietario:")
+lblDuenio = Label(frameDatos, textvariable=propitario)
 lblDuenio.config(font="Arial", bg="White", pady=10)
 lblDuenio.place(x=5, y=10)
-lblDuenio = Label(frameDatos, text="Placa:")
+lblDuenio = Label(frameDatos, textvariable=placa)
 lblDuenio.config(font="Arial", bg="White", pady=10)
 lblDuenio.place(x=5, y=70)
-lblDuenio = Label(frameDatos, text="Marca:")
+lblDuenio = Label(frameDatos, textvariable=marca)
 lblDuenio.config(font="Arial", bg="White", pady=10)
 lblDuenio.place(x=5, y=130)
-lblDuenio = Label(frameDatos, text="Modelo:")
+lblDuenio = Label(frameDatos, textvariable=modelo)
 lblDuenio.config(font="Arial", bg="White", pady=10)
 lblDuenio.place(x=5, y=190)
-lblDuenio = Label(frameDatos, text="Color:")
+lblDuenio = Label(frameDatos, textvariable=color)
 lblDuenio.config(font="Arial", bg="White", pady=10)
 lblDuenio.place(x=5, y=250)
 
@@ -135,6 +141,10 @@ frameReportes.place(x=820, y=50)
 frameReportes.config(bg="white")
 frameReportes.config(width="250", height="550")
 frameReportes.config(bd=2, relief="ridge")
+
+#d = Database()
+
+
 
 principal.geometry("1120x720")
 principal.resizable(0,0)
