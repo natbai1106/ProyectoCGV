@@ -45,8 +45,7 @@ class process_image:
             self.__class__.text = pytesseract.image_to_string(self.placa,config="-l eng --oem 1 --psm 9")
           else:
             self.__class__.text="No se se dectecto"
-        else:
-          self.__class__.text="No se dectecto"
+ 
 
 
     #print('Vuelta ',contar)
