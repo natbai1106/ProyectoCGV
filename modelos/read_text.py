@@ -20,7 +20,7 @@ class process_image:
     pass
  
   def get_processed_image(self,ruta=""):
-    
+    self.__class__.text="No se encontro"
     image = cv2.imread(ruta)
     image = imutils.resize(image,width=560)
   
@@ -53,8 +53,8 @@ class process_image:
       self.__class__.text = re.sub(r"[\W_]+","",self.text)
       self.__class__.text = self.validate_placa(self.text)
       #text=""
-    if self.placa is not None and len(self.placa)>0:
-      cv2.imshow('PLACA',self.placa)
+    #if self.placa is not None and len(self.placa)>0:
+    #  cv2.imshow('PLACA',self.placa)
     cv2.rectangle(image,(y,x),(y+h,x+w),(0,255,0),2)
     cv2.putText(image,self.text,(10,30),1,2.2,(0,255,0),3)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -80,6 +80,6 @@ class process_image:
     numbers = re.sub(r"[a-zA-Z]", "0", numbers)
     
     placa = placa[:3]+numbers;
-    print(placa)
+    
     return placa
          

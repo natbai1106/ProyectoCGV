@@ -1,12 +1,50 @@
+ 
 from tkinter import *
 from tkinter import messagebox
+
+from cv2 import goodFeaturesToTrack
 from modelos import read_text
 from tkinter import filedialog
 from PIL import Image
 from PIL import ImageTk
+from tkinter import ttk
+from imutils import paths
 
-def next_photo_event():
-    messagebox.showinfo(message="Mensaje", title="Título")
+rutaFotos = sorted(list(paths.list_images("ProyectoCGV/images/")))
+index  =  0
+car = read_text.process_image()
+placa =""
+class Load:
+    list = []
+    def __init__(self) -> None:
+        self.list=[]
+        pass
+    def next_photo_event(self):
+        self.l
+    def load_image(self):
+        return  sorted(list(paths.list_images("ProyectoCGV/images/")))
+def next_photo():
+    
+    print(len(rutaFotos))
+    if len(rutaFotos)>0:
+        global index
+        image =car.get_processed_image(ruta=rutaFotos[index])
+        placa = StringVar()
+        # Para visualizar la imagen en lblOutputImage en la GUI
+        im = Image.fromarray(image)
+        img = ImageTk.PhotoImage(image=im)
+        lblCar.configure(image=img)
+        lblCar.image = img
+        placa.set(car.text)
+        if index >= len(rutaFotos)-1:
+            index=0
+        else:
+            index+=1
+        
+    
+#Variables de inicialización
+
+
 principal = Tk()
 principal.title("Placas")
 principal.configure(bg="blanched almond")
@@ -34,20 +72,11 @@ lblFactura.place(x=490, y=420)
 lblCar = Label(frameSecundario, text="vehiculo", font=(18))
 lblCar.config(bg="blanched almond")
 lblCar.config(font="Arial")
-
-car = read_text.process_image()
-image =car.get_processed_image(ruta="ProyectoCGV/images/c2.jpg")
-#image =car.placa;
-
-placa = StringVar()
-# Para visualizar la imagen en lblOutputImage en la GUI
-im = Image.fromarray(image)
-img = ImageTk.PhotoImage(image=im)
-lblCar.configure(image=img)
-lblCar.image = img
-placa.set(car.text)
 lblCar.place(x=0, y=0)
-btnSiguiente = Button(frameSecundario, textvariable=placa,command=next_photo_event)
+next_photo()#Se llama a la funcion next foto para que cargue un carro por defecto
+
+
+btnSiguiente = Button(frameSecundario, text="Siguiente",command=next_photo)
 
 btnSiguiente.place(x=10, y=300)
 

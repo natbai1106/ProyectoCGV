@@ -140,7 +140,7 @@ class DetectANPR:
         # perform a blackhat morphological operation that will allow
         # us to reveal dark regions (i.e., text) on light backgrounds
         # (i.e., the license plate itself)
-        rectKern = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 13))
+        rectKern = cv2.getStructuringElement(cv2.MORPH_RECT, (15, ))
         blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, rectKern)
         self.debug_imshow("Blackhat", blackhat)
         # next, find regions in the image that are light
