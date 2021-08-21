@@ -1,9 +1,30 @@
+from mysql.connector import cursor
+from pymysql import cursors
+from CRUD.db import Database
 from tkinter import *
 from tkinter import messagebox
 from modelos import read_text
 from tkinter import filedialog
 from PIL import Image
 from PIL import ImageTk
+#from modelos import db
+
+import mysql.connector 
+
+con = {
+    'host':'173.249.21.6', 
+    'user':'movil2', 
+    'passwd':'carwash2021', 
+    'database':'proyectofinal'
+}
+
+conexion = mysql.connector.connect(**con)
+cursor = conexion.cursor()
+sql = "select tbl_personas.nombre, tbl_vehiculos.placa, tbl_marcas.nombre, tbl_vehiculos.modelo, tbl_vehiculos.color from tbl_vehiculos inner join tbl_personas on tbl_vehiculos.persona_id = tbl_personas.persona_id inner join tbl_marcas on tbl_vehiculos.marca_id = tbl_marcas.marca_id where tbl_vehiculos.placa = 'pdr6349'"
+cursor.execute(sql)
+resultado = cursor.fetchall()
+for datos in resultado:
+    print(datos)
 
 def next_photo_event():
     messagebox.showinfo(message="Mensaje", title="Título")
@@ -106,6 +127,10 @@ frameReportes.place(x=820, y=50)
 frameReportes.config(bg="white")
 frameReportes.config(width="250", height="550")
 frameReportes.config(bd=2, relief="ridge")
+
+#d = Database()
+
+
 
 principal.geometry("1120x720")
 principal.resizable(0,0)
