@@ -16,12 +16,13 @@ frameSecundario.config(bg="white")
 frameSecundario.config(width="650", height="350")
 frameSecundario.config(bd=25)
 frameSecundario.config(bd=2, relief="ridge")
-
+#Label que contendra la foto del carro
 lblCar = Label(frameSecundario, text="vehiculo", font=(18))
 lblCar.config(bg="blanched almond")
 lblCar.config(font="Arial")
+
 car = read_text.process_image()
-image =car.get_processed_image()
+image =car.get_processed_image(ruta="ProyectoCGV/images/c5.jpg")
 #image =car.placa;
 
 placa = StringVar()
