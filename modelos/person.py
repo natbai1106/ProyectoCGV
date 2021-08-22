@@ -5,7 +5,7 @@ class Person:
         self.connection=Database()
         pass
     def get_info_owner(self,placa):
-        sql="select tbl_personas.nombre, tbl_vehiculos.placa, tbl_marcas.nombre, tbl_vehiculos.modelo, tbl_vehiculos.color, tbl_vehiculos.vehiculo_id,(select precio from tbl_precio_peaje where num_eje = tbl_vehiculos.num_ejes) as Precio_Peaje,tbl_personas.fecha_max_pago from tbl_vehiculos inner join tbl_personas on tbl_vehiculos.persona_id = tbl_personas.persona_id inner join tbl_marcas on tbl_vehiculos.marca_id = tbl_marcas.marca_id where tbl_vehiculos.placa =LOWER('"+str(placa)+"')"
+        sql="select tbl_personas.nombre, tbl_vehiculos.placa, tbl_marcas.nombre, tbl_vehiculos.modelo, tbl_vehiculos.color, tbl_vehiculos.vehiculo_id,(select precio from tbl_precio_peaje where num_eje = tbl_vehiculos.num_ejes) as Precio_Peaje,tbl_personas.fecha_max_pago, tbl_vehiculos.num_ejes from tbl_vehiculos inner join tbl_personas on tbl_vehiculos.persona_id = tbl_personas.persona_id inner join tbl_marcas on tbl_vehiculos.marca_id = tbl_marcas.marca_id where tbl_vehiculos.placa =LOWER('"+str(placa)+"')"
         #print(sql)
         self.connection.cursor.execute(sql)     
         resultado = self.connection.cursor.fetchall()
