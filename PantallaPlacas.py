@@ -1,4 +1,5 @@
  
+from cv2 import FORMATTER_FMT_MATLAB
 from mysql.connector import cursor
 from pymysql import cursors
 from CRUD.db import Database
@@ -12,14 +13,16 @@ from PIL import ImageTk
 from tkinter import ttk
 from imutils import paths
 from modelos import person
+from datetime import datetime, timedelta,date
+import time
 rutaFotos = sorted(list(paths.list_images("images/")))
 index  =  0
 car = read_text.process_image()
-
+persona = person.Person()
+widthCenter = "500"
 
 
 def next_photo():
-    
     if len(rutaFotos)>0:
         global index
         
@@ -30,19 +33,49 @@ def next_photo():
         lblCar.configure(image=img)
         lblCar.image = img
         placa.set("Placa: "+ car.text)
-        persona = person.Person()
-        info_owner = persona.get_info_owner(car.text)
-        print(info_owner)   
+        info_owner = persona.get_info_owner(car.text)   
         if info_owner is not None:
             propitario.set("Propietario: "+str(info_owner[0]))
             marca.set("Marca: "+str(info_owner[2]))
             modelo.set("Modelo: "+str(info_owner[3]))
             color.set("Color: "+info_owner[4])
+            #se extraen todos los reportes del vehiculo
+            reportes =persona.get_reports_vehicle(str(info_owner[5]))
+            DibujarLista(frameReportes,reportes)
+            if car.text != "Nos0000":
+                #Se conparan las fechas
+                now = str(date.today());
+                vencimiento=str(info_owner[7])
+                fecha_vencimiento = time.strptime(vencimiento, "%Y-%m-%d")
+                fecha_actual = time.strptime(now, "%Y-%m-%d")
+                if fecha_actual > fecha_vencimiento:
+                    messagebox.showinfo("Fecha de facturación vencidad","La fecha de pago de facturas esta vencida, se agregara a la tabla de reportes")
         if index >= len(rutaFotos)-1:
             index=0
         else:
             index+=1
-           
+def DibujarLista(frame,reportes=None):
+
+    lista = ttk.Treeview(frame, columns=(1),show="headings", height="9")
+    # estilo
+    estilo = ttk.Style()
+    estilo.theme_use("clam")
+    
+    estilo.configure("Treeview.Heading", background="#0051C8", relief="flat", foreground="white")
+    lista.heading(1, text="Reportes del vehiculo")
+    lista.column(1, anchor=CENTER, width="100")
+
+    if len(reportes)>0:
+        lblReporte.config(fg="red")
+        alertaReport.set("ALERTA! Vehiculo con reporte")
+        for reporte  in reportes:
+            lista.insert('','end', values=reporte)
+    else:
+        lblReporte.config(fg="green")
+        alertaReport.set("Sin reportes")
+ 
+        
+    lista.place(x=0, y=30,width=widthCenter)         
 
 
 principal = Tk()
@@ -51,29 +84,26 @@ propitario=StringVar(value="Propietario: ")
 marca=StringVar(value="Marca: ")
 modelo=StringVar(value="Modelo: ")
 color=StringVar(value="Color: ")
-
+alertaReport = StringVar(value="Sin reporte")
 principal.title("Placas")
 principal.configure(bg="blanched almond")
 frameSecundario = Frame()
 frameSecundario.place(x=335, y=50)
 frameSecundario.config(bg="white")
-frameSecundario.config(width="450", height="350")
+frameSecundario.config(width=widthCenter, height="450")
 frameSecundario.config(bd=25)
 frameSecundario.config(bd=2, relief="ridge")
 
-frameFactura = Frame()
-frameFactura.place(x=335, y=450)
-frameFactura.config(bg="white")
-frameFactura.config(width="450", height="150")
-frameFactura.config(bd=25)
-frameFactura.config(bd=2, relief="ridge")
-btnFactura = Button(frameFactura, text="PENDIENTE")
+frameReportes = Frame()
+frameReportes.place(x=335, y=490)
+frameReportes.config(bg="white")
+frameReportes.config(width=widthCenter, height="150")
+frameReportes.config(bd=25)
+frameReportes.config(bd=2, relief="ridge")
+btnFactura = Button(frameReportes, text="PENDIENTE")
 btnFactura.place(x=35, y=100)
 
-lblFactura = Label(principal, text="F  A  C  T  U  R  A", font=(20))
-lblFactura.config(bg="blanched almond")
-lblFactura.config(font="Arial")
-lblFactura.place(x=490, y=420)
+
 
 lblCar = Label(frameSecundario, text="vehiculo", font=(18))
 lblCar.config(bg="blanched almond")
@@ -96,10 +126,10 @@ lblImagenPlaca.config(bg="blanched almond")
 lblImagenPlaca.config(font="Arial")
 lblImagenPlaca.place(x=450, y=20)
 
-lblReporte = Label(principal, text="Reporte", font=(16))
-lblReporte.config(bg="blanched almond")
-lblReporte.config(font="Arial")
-lblReporte.place(x=875, y=20)
+lblFactura = Label(principal, text="Reporte", font=(16))
+lblFactura.config(bg="blanched almond")
+lblFactura.config(font="Arial")
+lblFactura.place(x=875, y=20)
 
 frameDatos = Frame()
 frameDatos.place(x=50, y=50)
@@ -136,16 +166,19 @@ btn4 = Button(principal, text="PENDIENTE")
 btn4.place(x=887, y=625)
 btn4.config(height=2, width=25)
 
-frameReportes = Frame()
-frameReportes.place(x=820, y=50)
-frameReportes.config(bg="white")
-frameReportes.config(width="250", height="550")
-frameReportes.config(bd=2, relief="ridge")
+frameFactura = Frame() 
+frameFactura.place(x=820, y=50)
+frameFactura.config(bg="white")
+frameFactura.config(width="250", height="550")
+frameFactura.config(bd=2, relief="ridge")
+lblReporte = Label(frameReportes, textvariable=alertaReport)
+lblReporte.config(bg="white")
+lblReporte.config(font=("Arial",18,"bold"))
+lblReporte.config(foreground="#0EAA10")
+lblReporte.place(x=0, y=0)
 
-#d = Database()
 
+principal.geometry("1280x680")
 
-
-principal.geometry("1120x720")
 principal.resizable(0,0)
 principal.mainloop()
