@@ -1,4 +1,5 @@
 
+from tkinter import Text
 import cv2
 import imutils
 from imutils.object_detection import non_max_suppression
@@ -14,13 +15,14 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 
 class process_image:
   text=""
-  placa=[]
+  placa=None
   
   def __init__(self):
     pass
  
   def get_processed_image(self,ruta=""):
-    
+    self.__class__.text="No se encontro"
+    #self.placa = None
     image = cv2.imread(ruta)
     image = imutils.resize(image,width=560)
   
@@ -42,21 +44,25 @@ class process_image:
         
           if aspect_ratio>2:
             self.__class__.placa = gray[y:y+h,x:x+w]
+            cv2.rectangle(image,(x,y),(x+w,h+y),(0,255,0),3)
             self.__class__.text = pytesseract.image_to_string(self.placa,config="-l eng --oem 1 --psm 9")
+            self.__class__.text = re.sub(r"[\W_]+","",self.text)
+            self.__class__.text = self.validate_placa(self.text)
+            cv2.putText(image,self.text,(x,y-10),1,2.2,(0,255,0),2)
           else:
-            self.__class__.text="No se se dectecto"
+            self.__class__.text="No se encontro"
  
 
 
     #print('Vuelta ',contar)
-    if len(self.text)>0:
-      self.__class__.text = re.sub(r"[\W_]+","",self.text)
-      self.__class__.text = self.validate_placa(self.text)
+
+    self.__class__.text = re.sub(r"[\W_]+","",self.text)
+    self.__class__.text = self.validate_placa(self.text)
+  
       #text=""
-    if self.placa is not None and len(self.placa)>0:
-      cv2.imshow('PLACA',self.placa)
-    cv2.rectangle(image,(y,x),(y+h,x+w),(0,255,0),2)
-    cv2.putText(image,self.text,(10,30),1,2.2,(0,255,0),3)
+    #if self.placa is not None and len(self.placa)>0:
+    #  cv2.imshow('PLACA',self.placa)
+  
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
@@ -80,6 +86,6 @@ class process_image:
     numbers = re.sub(r"[a-zA-Z]", "0", numbers)
     
     placa = placa[:3]+numbers;
-    print(placa)
+    
     return placa
          

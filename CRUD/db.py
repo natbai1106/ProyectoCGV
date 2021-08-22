@@ -53,3 +53,5 @@ class Database:
         self.cursor.execute(sql)
         #Guardamos cambios
         self.conn.commit()
+    
+        
