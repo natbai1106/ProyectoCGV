@@ -50,6 +50,7 @@ def next_photo():
                 fecha_actual = time.strptime(now, "%Y-%m-%d")
                 if fecha_actual > fecha_vencimiento:
                     messagebox.showinfo("Fecha de facturación vencidad","La fecha de pago de facturas esta vencida, se agregara a la tabla de reportes")
+                    persona.InsertItems([str(info_owner[5]),2])
         if index >= len(rutaFotos)-1:
             index=0
         else:
