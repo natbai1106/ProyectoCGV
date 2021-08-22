@@ -44,6 +44,7 @@ class process_image:
         
           if aspect_ratio>2:
             self.__class__.placa = gray[y:y+h,x:x+w]
+            cv2.imshow('PLACA',self.placa)
             cv2.rectangle(image,(x,y),(x+w,h+y),(0,255,0),3)
             self.__class__.text = pytesseract.image_to_string(self.placa,config="-l eng --oem 1 --psm 9")
             self.__class__.text = re.sub(r"[\W_]+","",self.text)
